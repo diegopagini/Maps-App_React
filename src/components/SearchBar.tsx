@@ -2,6 +2,7 @@
 import { ChangeEvent, useContext, useRef } from 'react';
 
 import { PlacesContext } from '../context';
+import { SearchResults } from './SearchResults';
 
 export const SearchBar = () => {
 	const { searchPlacesByQuery } = useContext(PlacesContext);
@@ -24,6 +25,8 @@ export const SearchBar = () => {
 				placeholder='Buscar lugar...'
 				onChange={onQueryChanged}
 			/>
+
+			<SearchResults />
 		</div>
 	);
 };
