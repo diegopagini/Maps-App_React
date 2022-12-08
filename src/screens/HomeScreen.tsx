@@ -1,12 +1,13 @@
 /** @format */
-import { ButtonMyLocation, MapView, ReactLogo } from '../components';
+import { ButtonMyLocation, MapView, ReactLogo, SearchBar } from '../components';
 
 export const HomeScreen = () => {
 	return (
 		<div>
-			<MapView />
 			<ButtonMyLocation />
+			<MapView />
 			<ReactLogo />
+			<SearchBar />
 		</div>
 	);
 };

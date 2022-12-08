@@ -3,7 +3,7 @@ import mapboxgl from 'mapbox-gl';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
-import { MB_TOKEN } from './apis/token';
+import { MB_TOKEN } from './apis';
 import { MapsApp } from './MapsApp';
 
 mapboxgl.accessToken = MB_TOKEN;

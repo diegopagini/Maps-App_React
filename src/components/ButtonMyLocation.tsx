@@ -3,8 +3,6 @@ import { useContext } from 'react';
 
 import { MapContext, PlacesContext } from '../context';
 
-/** @format */
-
 export const ButtonMyLocation = () => {
 	const { map, isMapReady } = useContext(MapContext);
 	const { userLocation } = useContext(PlacesContext);
