@@ -1,46 +1,106 @@
-# Getting Started with Create React App
+<!-- @format -->
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Maps App
 
-## Available Scripts
+### getUserLocation.ts
 
-In the project directory, you can run:
+```typescript
+export const getUserLocation = async (): Promise<[number, number]> => {
+	return new Promise((resolve, reject) => {
+		navigator.geolocation.getCurrentPosition(
+			({ coords }: GeolocationPosition) => {
+				resolve([coords.longitude, coords.latitude]);
+			},
+			(err: GeolocationPositionError) => {
+				alert('Failed to get geolocation');
+				console.error(err);
+				reject();
+			}
+		);
+	});
+};
+```
 
-### `npm start`
+### PlacesContext.ts
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```typescript
+import { createContext } from 'react';
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+export interface PlacesContextProps {
+	isLoading: boolean;
+	userLocation?: [number, number];
+}
 
-### `npm test`
+export const PlacesContext = createContext<PlacesContextProps>({
+	isLoading: true,
+	userLocation: undefined,
+});
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### PlacesProvider.tsx
 
-### `npm run build`
+```tsx
+import { useEffect, useReducer } from 'react';
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+import { getUserLocation } from '../../helpers';
+import { PlacesContext } from './PlacesContext';
+import { placesReducer } from './placesReducer';
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+export interface PlacesState {
+	isLoading: boolean;
+	userLocation?: [number, number];
+}
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+const INITIAL_STATE: PlacesState = {
+	isLoading: true,
+	userLocation: undefined,
+};
 
-### `npm run eject`
+interface Props {
+	children: JSX.Element | JSX.Element[];
+}
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+export const PlacesProvider = ({ children }: Props) => {
+	const [state, dispatch] = useReducer(placesReducer, INITIAL_STATE);
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+	useEffect(() => {
+		getUserLocation().then((lngLat: [number, number]) =>
+			dispatch({ type: 'setUserLocation', payload: lngLat })
+		);
+	}, []);
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+	return <PlacesContext.Provider value={{ ...state }}>{children}</PlacesContext.Provider>;
+};
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### placesReducer.ts
 
-## Learn More
+```typescript
+import { PlacesState } from './PlacesProvider';
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+type PlacesAction = { type: 'setUserLocation'; payload: [number, number] };
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+export const placesReducer = (state: PlacesState, action: PlacesAction): PlacesState => {
+	switch (action.type) {
+		case 'setUserLocation':
+			return {
+				...state,
+				isLoading: false,
+				userLocation: action.payload,
+			};
+
+		default:
+			return state;
+	}
+};
+```
+
+### MapsApp.tsx
+
+```tsx
+import { PlacesProvider } from './context';
+
+export const MapsApp = () => {
+	return <PlacesProvider>{/* Content */}</PlacesProvider>;
+};
+```
