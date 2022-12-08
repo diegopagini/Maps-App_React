@@ -1,8 +1,12 @@
 /** @format */
+import mapboxgl from 'mapbox-gl';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
+import { MB_TOKEN } from './apis/token';
 import { MapsApp } from './MapsApp';
+
+mapboxgl.accessToken = MB_TOKEN;
 
 // Browser without geolocation.
 if (!navigator.geolocation) {
