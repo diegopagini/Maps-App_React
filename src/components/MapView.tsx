@@ -4,22 +4,27 @@ import '../styles.css';
 import { Map } from 'mapbox-gl';
 import { useContext, useLayoutEffect, useRef } from 'react';
 
-import { PlacesContext } from '../context';
+import { MapContext, PlacesContext } from '../context';
 import { Loading } from './Loading';
 
 export const MapView = () => {
 	const { isLoading, userLocation } = useContext(PlacesContext);
+	const { setMap } = useContext(MapContext);
 	const mapDiv = useRef<HTMLDivElement>(null);
+
 	useLayoutEffect(() => {
 		if (!isLoading) {
-			new Map({
+			const map = new Map({
 				container: mapDiv.current!,
 				style: 'mapbox://styles/mapbox/streets-v12',
 				center: userLocation,
 				zoom: 14,
 			});
+
+			setMap(map);
 		}
-	}, [isLoading, userLocation]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isLoading]);
 
 	if (isLoading) return <Loading />;
 
