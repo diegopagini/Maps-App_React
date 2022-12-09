@@ -13,11 +13,11 @@
 .search-container {
 	background-color: #fff;
 	border-radius: 0.5px;
-	bottom: 1.25rem;
 	box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
 	left: 1.25rem;
 	padding: 0.5rem;
 	position: fixed;
+	top: 1.25rem;
 	width: 250px;
 	z-index: 100;
 }
