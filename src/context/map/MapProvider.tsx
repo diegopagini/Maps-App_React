@@ -1,5 +1,7 @@
 /** @format */
-import { AnySourceData, LngLatBounds, Map, Marker, Popup } from 'mapbox-gl';
+//@ts-ignore
+// eslint-disable-next-line import/no-webpack-loader-syntax
+import { AnySourceData, LngLatBounds, Map, Marker, Popup } from '!mapbox-gl';
 import { useContext, useEffect, useReducer } from 'react';
 
 import { directionsApi } from '../../apis';
@@ -7,6 +9,7 @@ import { Directions } from '../../interfaces/directions.interface';
 import { PlacesContext } from '../places/PlacesContext';
 import { MapContext } from './MapContext';
 import { mapReducer } from './mapReducer';
+
 
 export interface MapState {
 	isMapReady: boolean;

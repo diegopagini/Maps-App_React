@@ -1,10 +1,13 @@
 /** @format */
-import mapboxgl from 'mapbox-gl';
+//@ts-ignore
+// eslint-disable-next-line import/no-webpack-loader-syntax
+import mapboxgl from '!mapbox-gl';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
 import { MB_TOKEN } from './apis';
 import { MapsApp } from './MapsApp';
+
 
 mapboxgl.accessToken = MB_TOKEN;
 
