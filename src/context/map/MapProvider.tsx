@@ -2,6 +2,8 @@
 import { Map, Marker, Popup } from 'mapbox-gl';
 import { useContext, useEffect, useReducer } from 'react';
 
+import { directionsApi } from '../../apis';
+import { Directions } from '../../interfaces/directions.interface';
 import { PlacesContext } from '../places/PlacesContext';
 import { MapContext } from './MapContext';
 import { mapReducer } from './mapReducer';
@@ -46,6 +48,17 @@ export const MapProvider = ({ children }: Props) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [places]);
 
+	const getRouteBetweenPoins = async (start: [number, number], end: [number, number]) => {
+		const resp = await directionsApi.get<Directions>(`/${start.join(',')};${end.join(',')}`);
+		const { distance, duration, geometry } = resp.data.routes[0];
+		let kms = distance / 1000;
+		kms = Math.round(kms * 100);
+		kms /= 100;
+
+		const minutes = Math.floor(duration / 60);
+		console.log({ kms, minutes, geometry });
+	};
+
 	const setMap = (map: Map) => {
 		const myLocationPopup = new Popup().setHTML(`
 		<h4>Aquí estoy</h4>
@@ -68,6 +81,7 @@ export const MapProvider = ({ children }: Props) => {
 				...state,
 				// Methods
 				setMap,
+				getRouteBetweenPoins,
 			}}>
 			{children}
 		</MapContext.Provider>
